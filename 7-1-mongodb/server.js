@@ -202,3 +202,52 @@
 
 
 // delete document
+import mongoose from "mongoose";
+
+mongoose.connect("mongodb+srv://s202279500_db_user:S0504-junior@cluster0.ep4qoak.mongodb.net/labDB")
+.then(() => console.log("✅ Connected to MongoDB"))
+.catch(err => console.log(err));
+
+const studentSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  major: String
+});
+
+const Student = mongoose.model("Student", studentSchema);
+
+async function createStudents() {
+  await Student.deleteMany({}); 
+
+  await Student.insertMany([
+    { name: "Ali", age: 21, major: "CS" },
+    { name: "Sara", age: 23, major: "SE" }
+  ]);
+
+  console.log("✅ Inserted");
+}
+
+async function readStudents() {
+  const all = await Student.find();
+  console.log(all);
+}
+
+async function updateStudent() {
+  await Student.updateOne({ name: "Ali" }, { age: 22 });
+  console.log("✅ Updated Ali");
+}
+
+async function deleteStudent() {
+  await Student.deleteOne({ name: "Sara" });
+  console.log("✅ Deleted Sara");
+}
+
+async function run() {
+  await createStudents();
+  await readStudents();
+  await updateStudent();
+  await deleteStudent();
+  await readStudents();
+}
+
+run();
